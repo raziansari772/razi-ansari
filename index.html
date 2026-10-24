@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpeakFluent AI English Practice</title>
+    <meta name="description" content="Interactive English speaking practice app for beginners with voice conversation, daily challenges, vocabulary builder, and pronunciation practice." />
+    <meta property="og:title" content="SpeakFluent AI English Practice" />
+    <meta property="og:description" content="Interactive English speaking practice app for beginners with voice conversation, daily challenges, vocabulary builder, and pronunciation practice." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col md:flex-row">
+    
+    <!-- Mobile Navigation Bar -->
+    <div class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-40">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-100">
+          SF
+        </div>
+        <span class="font-bold text-slate-900 text-lg">SpeakFluent</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full text-xs font-semibold border border-amber-200">
+          <span class="mr-1">🔥</span>
+          <span id="mobile-streak-counter">0 Days</span>
+        </div>
+        <button id="mobile-menu-btn" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop Sidebar Navigation -->
+    <aside id="sidebar" class="fixed md:sticky top-0 h-screen w-64 bg-white border-r border-slate-200 flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out shrink-0">
+      <!-- App Brand -->
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-extrabold text-lg shadow-lg shadow-indigo-200">
+            SF
+          </div>
+          <div>
+            <h1 class="font-extrabold text-slate-900 text-lg leading-tight">SpeakFluent</h1>
+            <p class="text-xs text-indigo-600 font-semibold tracking-wide uppercase">AI Speaking Coach</p>
+          </div>
+        </div>
+        <button id="close-sidebar-btn" class="md:hidden p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+        <button data-view="home" class="nav-item active w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-semibold text-sm transition-all text-indigo-600 bg-indigo-50/80">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span>Home Dashboard</span>
+        </button>
+
+        <button data-view="conversation" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+          <span>AI Conversation</span>
+        </button>
+
+        <button data-view="daily" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <span>Daily Questions</span>
+        </button>
+
+        <button data-view="vocabulary" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span>Vocabulary Builder</span>
+        </button>
+
+        <button data-view="pronunciation" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+          <span>Pronunciation Lab</span>
+        </button>
+
+        <button data-view="progress" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span>Progress & Analytics</span>
+        </button>
+
+        <button data-view="settings" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl font-medium text-sm transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <!-- User Level & Streak footer -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+        <div class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs">
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <span class="font-medium">Active Level</span>
+            <span id="sidebar-level-badge" class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-bold">Beginner</span>
+          </div>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+            <div class="flex items-center space-x-1.5 text-xs text-slate-600">
+              <span class="text-amber-500">🔥</span>
+              <span class="font-bold text-slate-800" id="sidebar-streak-counter">0 Days</span>
+            </div>
+            <span class="text-[11px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded" id="backend-status-pill">AI Online</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay backdrop for mobile menu -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-slate-900/40 z-40 hidden md:hidden"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto">
+      
+      <!-- Top Header Bar -->
+      <header class="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-30 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <h2 id="page-title" class="text-xl font-bold text-slate-900">Home Dashboard</h2>
+          <span id="page-subtitle-badge" class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+            Interactive Speaking
+          </span>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <!-- Voice Audio Output Toggle -->
+          <button id="tts-toggle-btn" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-700" title="Auto-read AI questions aloud">
+            <svg id="tts-icon" class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            <span class="hidden sm:inline">Audio:</span>
+            <span id="tts-toggle-status" class="font-bold text-indigo-600">ON</span>
+          </button>
+
+          <!-- Current Language Indicator -->
+          <div class="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg bg-slate-100 font-semibold text-slate-600">
+            <span>Guide:</span>
+            <span id="current-lang-indicator" class="text-indigo-600">English</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- View Container -->
+      <div class="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full flex-1">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: HOME DASHBOARD                     -->
+        <!-- ========================================== -->
+        <section id="view-home" class="space-y-6">
+          <!-- Welcome Hero Banner -->
+          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 text-white p-6 sm:p-8 shadow-md">
+            <div class="relative z-10 max-w-2xl">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-xs text-white mb-3">
+                <span>🌟</span> Real Beginner English Speaking Practice
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Welcome, <span id="home-user-name">Learner</span>!
+              </h3>
+              <p class="mt-2 text-indigo-100 text-sm sm:text-base leading-relaxed">
+                Build real speaking confidence step by step. Speak with the AI tutor, get instant grammar corrections, expand vocabulary, and practice pronunciation out loud!
+              </p>
+              <div class="mt-5 flex flex-wrap items-center gap-3">
+                <button data-navigate="conversation" class="px-5 py-2.5 rounded-xl bg-white text-indigo-700 font-bold text-sm shadow-md hover:bg-indigo-50 transition-colors flex items-center gap-2">
+                  <span>Start AI Conversation</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+                <button data-navigate="daily" class="px-5 py-2.5 rounded-xl bg-indigo-800/60 hover:bg-indigo-800 text-white font-semibold text-sm border border-indigo-400/30 transition-colors">
+                  Today's Challenge
+                </button>
+              </div>
+            </div>
+            <!-- Decorative circle -->
+            <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+          </div>
+
+          <!-- Daily Speaking Challenge Card -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xl">
+                  🎯
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-bold text-slate-900 text-base">Today's Speaking Challenge</h4>
+                    <span id="home-challenge-status" class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5">Answer this question out loud to keep your daily streak alive!</p>
+                </div>
+              </div>
+              <button id="quick-start-challenge-btn" class="self-start sm:self-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors">
+                Practice This Now
+              </button>
+            </div>
+            <div class="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+              <div class="p-2 rounded-lg bg-indigo-100 text-indigo-700 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Question of the Day</span>
+                <p id="home-challenge-text" class="text-slate-800 font-semibold text-base mt-0.5">"What is your favorite hobby and why do you enjoy doing it?"</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real Metric Cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+              <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                <span>Daily Streak</span>
+                <span class="text-base">🔥</span>
+              </div>
+              <p id="stat-streak" class="text-2xl font-black text-slate-900 mt-2">0 Days</p>
+              <p class="text-[11px] text-slate-400 mt-1">Practice daily to build habit</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+              <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                <span>Completed Today</span>
+                <span class="text-base">✅</span>
+              </div>
+              <p id="stat-completed-today" class="text-2xl font-black text-slate-900 mt-2">0</p>
+              <p class="text-[11px] text-slate-400 mt-1">Exercises finished today</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+              <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                <span>Words Learned</span>
+                <span class="text-base">📖</span>
+              </div>
+              <p id="stat-words-learned" class="text-2xl font-black text-slate-900 mt-2">0</p>
+              <p class="text-[11px] text-slate-400 mt-1">Mastered vocabulary</p>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+              <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                <span>Total Sessions</span>
+                <span class="text-base">🎙️</span>
+              </div>
+              <p id="stat-total-sessions" class="text-2xl font-black text-slate-900 mt-2">0</p>
+              <p class="text-[11px] text-slate-400 mt-1">Speaking dialogs completed</p>
+            </div>
+          </div>
+
+          <!-- Practice Modes Grid -->
+          <div>
+            <h4 class="text-base font-bold text-slate-900 mb-3">Explore Practice Modes</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- Mode 1 -->
+              <button data-navigate="conversation" class="group text-left bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:shadow-md transition-all">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                  💬
+                </div>
+                <h5 class="font-bold text-slate-900 mt-3 group-hover:text-indigo-600 transition-colors">AI Conversation</h5>
+                <p class="text-xs text-slate-500 mt-1">Engage in back-and-forth dialogue across 7 topics with live coaching feedback.</p>
+              </button>
+
+              <!-- Mode 2 -->
+              <button data-navigate="daily" class="group text-left bg-white p-5 rounded-2xl border border-slate-200 hover:border-violet-500 hover:shadow-md transition-all">
+                <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                  ❓
+                </div>
+                <h5 class="font-bold text-slate-900 mt-3 group-hover:text-violet-600 transition-colors">Daily Questions</h5>
+                <p class="text-xs text-slate-500 mt-1">Answer targeted questions across Beginner, Intermediate, and Advanced tiers.</p>
+              </button>
+
+              <!-- Mode 3 -->
+              <button data-navigate="vocabulary" class="group text-left bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                  📚
+                </div>
+                <h5 class="font-bold text-slate-900 mt-3 group-hover:text-emerald-600 transition-colors">Vocabulary Builder</h5>
+                <p class="text-xs text-slate-500 mt-1">Learn essential words with definitions, examples, audio, and personal lists.</p>
+              </button>
+
+              <!-- Mode 4 -->
+              <button data-navigate="pronunciation" class="group text-left bg-white p-5 rounded-2xl border border-slate-200 hover:border-rose-500 hover:shadow-md transition-all">
+                <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform">
+                  🗣️
+                </div>
+                <h5 class="font-bold text-slate-900 mt-3 group-hover:text-rose-600 transition-colors">Pronunciation Lab</h5>
+                <p class="text-xs text-slate-500 mt-1">Listen to native model audio, speak into mic, and receive word comparison analysis.</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Helpful Beginner Tips -->
+          <div class="bg-indigo-50/60 rounded-2xl border border-indigo-100 p-5">
+            <h5 class="font-bold text-indigo-900 text-sm flex items-center gap-2">
+              <span>💡</span> Coach's Advice for English Beginners
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-xs text-indigo-900/80">
+              <div class="bg-white/80 p-3 rounded-xl border border-indigo-100/50">
+                <p class="font-bold text-indigo-950 mb-0.5">1. Speak Out Loud</p>
+                <p>Don't just read silently in your head. Say the words out loud so your mouth muscles adapt.</p>
+              </div>
+              <div class="bg-white/80 p-3 rounded-xl border border-indigo-100/50">
+                <p class="font-bold text-indigo-950 mb-0.5">2. Mistakes are Proof of Practice</p>
+                <p>Never worry about errors. Our AI coach gives simple, kind explanations to guide you.</p>
+              </div>
+              <div class="bg-white/80 p-3 rounded-xl border border-indigo-100/50">
+                <p class="font-bold text-indigo-950 mb-0.5">3. 10 Minutes Daily</p>
+                <p>Consistency beats cramming. A 10-minute daily session creates rapid progress in 30 days.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: AI CONVERSATION PRACTICE           -->
+        <!-- ========================================== -->
+        <section id="view-conversation" class="hidden space-y-6">
+          <!-- Topic Selector -->
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">Select Conversation Topic</label>
+            <div class="flex flex-wrap gap-2" id="topic-buttons-container">
+              <button data-topic="Introduction" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white">Introduction</button>
+              <button data-topic="School" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">School & Studies</button>
+              <button data-topic="Friends" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">Friends & Family</button>
+              <button data-topic="Hobbies" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">Hobbies & Free Time</button>
+              <button data-topic="Travel" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">Travel & Cities</button>
+              <button data-topic="Technology" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">Technology</button>
+              <button data-topic="Future Goals" class="topic-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200">Future Goals</button>
+            </div>
+          </div>
+
+          <!-- Conversation Chat Dialogue Area -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs flex flex-col h-[520px]">
+            <!-- Dialogue Header -->
+            <div class="px-6 py-3.5 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="relative">
+                  <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-600 text-white flex items-center justify-center font-bold text-sm">
+                    AI
+                  </div>
+                  <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm leading-tight">Coach Emma (AI Tutor)</h4>
+                  <p class="text-[11px] text-slate-500" id="conv-topic-indicator">Topic: Introduction</p>
+                </div>
+              </div>
+              <button id="reset-conversation-btn" class="text-xs text-slate-400 hover:text-slate-600 font-semibold px-2 py-1 rounded hover:bg-slate-50">
+                Restart Topic
+              </button>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="conversation-stream" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Input and Microphone Bar -->
+            <div class="p-4 border-t border-slate-100 bg-slate-50/70 rounded-b-2xl">
+              <!-- Recording Active Status Box -->
+              <div id="conv-recording-status" class="hidden mb-3 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </span>
+                  <div class="flex items-end space-x-1 h-5">
+                    <div class="w-1 bg-red-500 wave-bar-1"></div>
+                    <div class="w-1 bg-red-500 wave-bar-2"></div>
+                    <div class="w-1 bg-red-500 wave-bar-3"></div>
+                    <div class="w-1 bg-red-500 wave-bar-4"></div>
+                    <div class="w-1 bg-red-500 wave-bar-5"></div>
+                  </div>
+                  <span class="text-xs font-bold text-red-700">Listening to your voice... Speak clearly</span>
+                </div>
+                <button id="conv-stop-recording-btn" class="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700">
+                  Stop & Done
+                </button>
+              </div>
+
+              <!-- Input form -->
+              <form id="conversation-input-form" class="flex items-center gap-2">
+                <!-- Microphone trigger button -->
+                <button type="button" id="conv-mic-btn" class="w-11 h-11 shrink-0 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center transition-colors shadow-sm" title="Click to Speak using Microphone">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                </button>
+
+                <!-- Text Input -->
+                <input type="text" id="conv-text-input" placeholder="Type your answer in English or click the mic to speak..." class="flex-1 bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+
+                <!-- Submit Button -->
+                <button type="submit" id="conv-send-btn" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold transition-colors flex items-center gap-1.5 shrink-0">
+                  <span>Send</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+              </form>
+
+              <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+                <span id="speech-support-note">Speech Recognition is enabled in your browser.</span>
+                <span>Press Enter to send</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: DAILY SPEAKING QUESTIONS           -->
+        <!-- ========================================== -->
+        <section id="view-daily" class="hidden space-y-6">
+          <!-- Level Selector & Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+            <div>
+              <h3 class="font-bold text-slate-900 text-lg">Daily Speaking Challenge</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Answer the question out loud or in writing. Receive in-depth teacher feedback.</p>
+            </div>
+            <!-- Level Tabs -->
+            <div class="inline-flex p-1 bg-slate-100 rounded-xl self-start sm:self-auto" id="daily-level-tabs">
+              <button data-level="Beginner" class="daily-level-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-xs">Beginner</button>
+              <button data-level="Intermediate" class="daily-level-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">Intermediate</button>
+              <button data-level="Advanced" class="daily-level-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">Advanced</button>
+            </div>
+          </div>
+
+          <!-- Active Question Card -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span id="daily-q-category" class="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">Category: Routine</span>
+                <span id="daily-q-index" class="text-xs font-medium text-slate-400">Question 1 of 5</span>
+              </div>
+              <!-- Listen to Question button -->
+              <button id="daily-listen-q-btn" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-700">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <span>Listen to Question</span>
+              </button>
+            </div>
+
+            <!-- Big Question Text -->
+            <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50/50 to-slate-50 border border-indigo-100/70">
+              <p class="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1">Your Speaking Prompt</p>
+              <h2 id="daily-question-text" class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+                "What did you do yesterday morning?"
+              </h2>
+              <p id="daily-question-hint" class="text-xs text-slate-500 mt-2">
+                💡 Tip: Use past tense verbs like <em>woke up, had breakfast, studied, walked</em>.
+              </p>
+            </div>
+
+            <!-- Answer Box with Mic Option -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <label for="daily-answer-input" class="text-xs font-bold text-slate-700 uppercase tracking-wide">Your Spoken Answer</label>
+                <div class="flex items-center space-x-2">
+                  <button type="button" id="daily-mic-btn" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                    <span id="daily-mic-btn-text">Click to Speak</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Answer textarea -->
+              <div class="relative">
+                <textarea id="daily-answer-input" rows="3" placeholder="Speak into the microphone or type your spoken response here..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-all"></textarea>
+                
+                <!-- Live recording pulse banner inside textarea container -->
+                <div id="daily-recording-indicator" class="hidden absolute top-2 right-2 px-2.5 py-1 bg-red-600 text-white text-[11px] font-bold rounded-lg flex items-center space-x-1.5 shadow-sm">
+                  <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                  <span>Recording...</span>
+                </div>
+              </div>
+
+              <!-- Submit Buttons -->
+              <div class="flex items-center justify-between pt-2">
+                <button type="button" id="daily-next-q-btn" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
+                  Next Question →
+                </button>
+                <button type="button" id="daily-submit-btn" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-colors shadow-sm flex items-center space-x-2">
+                  <span>Get AI Feedback</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Feedback Result Container -->
+            <div id="daily-feedback-container" class="hidden pt-6 border-t border-slate-100 space-y-4">
+              <!-- Dynamically populated feedback -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: VOCABULARY BUILDER                 -->
+        <!-- ========================================== -->
+        <section id="view-vocabulary" class="hidden space-y-6">
+          <!-- Search & Filter Bar -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 class="font-bold text-slate-900 text-lg">Vocabulary Builder</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Learn useful conversational words, pronunciations, definitions, and sample sentences.</p>
+              </div>
+              <button id="open-add-word-modal-btn" class="self-start sm:self-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-colors flex items-center space-x-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span>Add Custom Word</span>
+              </button>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <!-- Search box -->
+              <div class="relative flex-1">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="vocab-search-input" placeholder="Search words, definitions, or examples..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white">
+              </div>
+
+              <!-- Filter tabs -->
+              <div class="flex flex-wrap gap-1.5" id="vocab-filter-tabs">
+                <button data-filter="all" class="vocab-filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white">All</button>
+                <button data-filter="core" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Daily Life</button>
+                <button data-filter="phrases" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Phrases & Idioms</button>
+                <button data-filter="saved" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">My Saved</button>
+                <button data-filter="learned" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Learned</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vocabulary Cards Grid -->
+          <div id="vocab-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: PRONUNCIATION PRACTICE LAB         -->
+        <!-- ========================================== -->
+        <section id="view-pronunciation" class="hidden space-y-6">
+          <!-- Header and Sentence Picker -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-slate-900 text-lg">Pronunciation Practice Lab</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Listen to natural English model sentences, repeat into the microphone, and compare accuracy.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 self-start sm:self-auto">
+                Voice Comparison
+              </span>
+            </div>
+
+            <!-- Sentence selector chips -->
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">Practice Sentence Presets</label>
+              <div class="flex flex-wrap gap-2" id="pronounce-preset-chips">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Pronunciation Studio -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
+            <!-- Target Sentence Display -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white relative overflow-hidden">
+              <div class="flex items-center justify-between mb-3 text-indigo-300 text-xs font-semibold">
+                <span>TARGET SENTENCE</span>
+                <div class="flex items-center space-x-2">
+                  <span>Speed:</span>
+                  <button id="pronounce-speed-btn" class="px-2 py-0.5 rounded bg-indigo-900/80 text-white font-bold text-xs hover:bg-indigo-800">1.0x</button>
+                </div>
+              </div>
+              
+              <h2 id="pronounce-target-text" class="text-xl sm:text-2xl font-bold leading-relaxed tracking-wide">
+                "Could you please explain that once more?"
+              </h2>
+              
+              <p id="pronounce-phonetic-text" class="text-xs text-indigo-300 font-mono mt-2">
+                /kʊd juː pliːz ɪkˈspleɪn ðæt wʌns mɔːr/
+              </p>
+
+              <!-- Audio Model Player -->
+              <div class="mt-5 flex items-center gap-3">
+                <button id="pronounce-listen-btn" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold rounded-xl transition-colors flex items-center space-x-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <span>Listen to Model Audio</span>
+                </button>
+                <span class="text-xs text-indigo-200">Listen 2-3 times before repeating!</span>
+              </div>
+            </div>
+
+            <!-- Speaking Mic Station -->
+            <div class="flex flex-col items-center justify-center py-6 px-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <button id="pronounce-mic-btn" class="w-20 h-20 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95" title="Click to speak this sentence">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+              </button>
+              <p id="pronounce-mic-label" class="mt-3 font-bold text-slate-800 text-sm">Click the microphone & read sentence out loud</p>
+              <p class="text-xs text-slate-400 mt-1">Make sure you allow microphone access in your browser.</p>
+            </div>
+
+            <!-- Comparison & Accuracy Results -->
+            <div id="pronounce-result-card" class="hidden p-5 rounded-2xl border border-slate-200 space-y-4">
+              <!-- Dynamically populated result -->
+            </div>
+
+            <!-- Important Educational Disclaimer -->
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 text-xs flex items-start gap-3">
+              <span class="text-base shrink-0">⚠️</span>
+              <div>
+                <p class="font-bold">Important Notice on Speech Recognition Assessment</p>
+                <p class="mt-0.5 leading-relaxed text-amber-800">
+                  Browser speech recognition compares sound patterns to recognized text. Variations in your microphone quality, room echo, and regional accents can cause differences. Use this tool for confidence and practicing clear articulation, not as an official exam grading system!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: PROGRESS & ANALYTICS               -->
+        <!-- ========================================== -->
+        <section id="view-progress" class="hidden space-y-6">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+            <h3 class="font-bold text-slate-900 text-lg">Your Speaking Progress & Stats</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Accurate local tracking of your practice sessions, streak, and vocabulary mastery.</p>
+          </div>
+
+          <!-- Progress Highlights -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <span class="text-xs font-semibold text-slate-500">Current Streak</span>
+              <p id="progress-streak-val" class="text-2xl font-black text-amber-600 mt-1">0 Days</p>
+              <span class="text-[11px] text-slate-400">Consecutive days</span>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <span class="text-xs font-semibold text-slate-500">Completed Exercises</span>
+              <p id="progress-exercises-val" class="text-2xl font-black text-indigo-600 mt-1">0</p>
+              <span class="text-[11px] text-slate-400">Total submitted</span>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <span class="text-xs font-semibold text-slate-500">Learned Vocabulary</span>
+              <p id="progress-vocab-val" class="text-2xl font-black text-emerald-600 mt-1">0</p>
+              <span class="text-[11px] text-slate-400">Words mastered</span>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+              <span class="text-xs font-semibold text-slate-500">Average Score</span>
+              <p id="progress-score-val" class="text-2xl font-black text-violet-600 mt-1">--</p>
+              <span class="text-[11px] text-slate-400">Based on evaluations</span>
+            </div>
+          </div>
+
+          <!-- Weekly Practice Chart (Real SVG Chart) -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-slate-900 text-base">Weekly Activity</h4>
+                <p class="text-xs text-slate-500">Number of speaking exercises completed over the last 7 days.</p>
+              </div>
+              <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Last 7 Days</span>
+            </div>
+            
+            <div id="weekly-chart-container" class="h-44 w-full flex items-end justify-between gap-2 pt-6 pb-2 border-b border-slate-100">
+              <!-- Dynamically populated SVG/Bar chart -->
+            </div>
+          </div>
+
+          <!-- Completed Session Log -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-slate-900 text-base">Recent Practice History</h4>
+              <span id="history-count" class="text-xs text-slate-400">0 records</span>
+            </div>
+            <div id="history-log-list" class="divide-y divide-slate-100 space-y-3">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: SETTINGS                           -->
+        <!-- ========================================== -->
+        <section id="view-settings" class="hidden space-y-6">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
+            <h3 class="font-bold text-slate-900 text-lg">App & Learning Settings</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Customize your learning level, explanation language, and audio preferences.</p>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100">
+            <!-- User Name -->
+            <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <label for="settings-username-input" class="font-bold text-slate-900 text-sm">Your Name</label>
+                <p class="text-xs text-slate-500 mt-0.5">Used for coach greetings and personalized feedback.</p>
+              </div>
+              <input type="text" id="settings-username-input" value="Learner" class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            </div>
+
+            <!-- Learning Level -->
+            <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="font-bold text-slate-900 text-sm">Learning Level</span>
+                <p class="text-xs text-slate-500 mt-0.5">Adjusts AI vocabulary complexity and speaking speed.</p>
+              </div>
+              <select id="settings-level-select" class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <option value="Beginner">Beginner (Simple words & short sentences)</option>
+                <option value="Intermediate">Intermediate (Conversational fluidity)</option>
+                <option value="Advanced">Advanced (Nuanced idioms & formal phrasing)</option>
+              </select>
+            </div>
+
+            <!-- Explanation Language -->
+            <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="font-bold text-slate-900 text-sm">Preferred Explanation Language</span>
+                <p class="text-xs text-slate-500 mt-0.5">Receive grammar explanations and tips in English or Urdu.</p>
+              </div>
+              <select id="settings-lang-select" class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <option value="English">English (Full English immersion)</option>
+                <option value="Urdu">Urdu (اردو میں وضاحت / Roman Urdu)</option>
+              </select>
+            </div>
+
+            <!-- Speech Voice Selection -->
+            <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="font-bold text-slate-900 text-sm">Text-to-Speech Voice</span>
+                <p class="text-xs text-slate-500 mt-0.5">Choose your preferred English accent voice installed on your system.</p>
+              </div>
+              <select id="settings-voice-select" class="w-full sm:w-64 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <option value="">Default English Voice</option>
+              </select>
+            </div>
+
+            <!-- Auto Play Audio Toggle -->
+            <div class="p-6 flex items-center justify-between">
+              <div>
+                <span class="font-bold text-slate-900 text-sm">Auto-Play AI Speaking Voice</span>
+                <p class="text-xs text-slate-500 mt-0.5">Automatically read new AI questions aloud as soon as they appear.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="settings-autoplay-audio" class="sr-only peer" checked>
+                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              </label>
+            </div>
+
+            <!-- Save Settings Button -->
+            <div class="p-6 flex justify-end">
+              <button id="save-settings-btn" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-colors shadow-xs">
+                Save Preferences
+              </button>
+            </div>
+
+            <!-- Danger Zone / Reset Progress -->
+            <div class="p-6 bg-rose-50/40 rounded-b-2xl">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h4 class="font-bold text-rose-800 text-sm">Reset Progress & Practice History</h4>
+                  <p class="text-xs text-rose-700/80 mt-0.5">Clear streaks, completed questions, custom vocabulary, and start fresh.</p>
+                </div>
+                <button id="open-reset-modal-btn" class="self-start sm:self-auto px-4 py-2 border border-rose-300 hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-xl transition-colors">
+                  Reset All Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Modal 1: Reset Confirmation -->
+    <div id="reset-confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-2xl">
+          ⚠️
+        </div>
+        <div>
+          <h3 class="font-extrabold text-slate-900 text-lg">Reset All Progress?</h3>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+            This will reset your daily streak, today's completed exercise count, conversation history, and custom vocabulary words back to zero. This action cannot be undone.
+          </p>
+        </div>
+        <div class="flex items-center justify-end space-x-2 pt-2">
+          <button id="cancel-reset-btn" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
+            Cancel
+          </button>
+          <button id="confirm-reset-btn" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow-xs">
+            Yes, Reset Everything
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 2: Add Custom Vocabulary Word -->
+    <div id="add-word-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-extrabold text-slate-900 text-lg">Add to Personal Vocabulary</h3>
+          <button id="close-add-word-modal-btn" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+        </div>
+        
+        <form id="add-word-form" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Word or Phrase *</label>
+            <input type="text" id="new-word-input" required placeholder="e.g. enthusiastic, take a break" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Part of Speech</label>
+            <input type="text" id="new-pos-input" placeholder="e.g. adjective, verb, idiom" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Simple Meaning *</label>
+            <input type="text" id="new-meaning-input" required placeholder="e.g. showing intense excitement or interest" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Example Sentence *</label>
+            <input type="text" id="new-example-input" required placeholder="e.g. He is enthusiastic about learning English." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div class="flex justify-end space-x-2 pt-2">
+            <button type="button" id="cancel-add-word-btn" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">
+              Cancel
+            </button>
+            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs">
+              Save Word
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "SpeakFluent AI English Practice",
+  "description": "Interactive English speaking practice app for beginners with voice conversation, daily challenges, vocabulary builder, and pronunciation practice.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
